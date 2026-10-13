@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Analiza expresiones matemáticas y visualiza su representación en código de tres y cuatro direcciones."
+    />
+    <meta name="theme-color" content="#f4f6fb" />
+    <title>Laboratorio de código intermedio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="estilos.css" />
+    <script src="index.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <main id="inicio">
+        <section class="workspace" aria-label="Generador de código intermedio">
+          <form id="expression-form" class="input-card" novalidate>
+            <div class="section-heading">
+              <div>
+                <span class="step-number">01</span>
+                <h2>Tu expresión</h2>
+              </div>
+              <span class="keyboard-hint">También puedes presionar Enter</span>
+            </div>
+            <label for="expr" class="field-label">EXPRESIÓN MATEMÁTICA</label>
+            <div class="expression-control">
+              <span class="input-prompt" aria-hidden="true">ƒ(x) =</span>
+              <input
+                id="expr"
+                name="expr"
+                type="text"
+                value="a = b + c * (d - 2)"
+                placeholder="Ej. total = (8 + 4) * 2"
+                autocomplete="off"
+                spellcheck="false"
+                aria-describedby="expression-help expression-error"
+              />
+            </div>
+            <p id="expression-help" class="field-help">
+              Usa números, variables, paréntesis y los operadores <code>+ − × ÷ ^</code>.
+            </p>
+            <p id="expression-error" class="message" role="alert" aria-live="polite" hidden></p>
+            <div class="form-actions">
+              <button class="button button-primary" type="submit">
+                <span>Calcular</span><span aria-hidden="true">↗</span>
+              </button>
+              <button class="button button-quiet" id="clear-button" type="button">Limpiar</button>
+            </div>
+          </form>
+
+          <section id="results" class="results" aria-live="polite" aria-busy="false">
+            <div class="result-heading">
+              <h1>Procedimiento</h1>
+              <span class="result-expression" id="result-expression"></span>
+            </div>
+            <div id="result-content" hidden>
+              <div class="answer-card" id="answer-card">
+                <span class="answer-icon" aria-hidden="true">∴</span>
+                <div>
+                  <p class="answer-label" id="answer-label">RESULTADO</p>
+                  <p class="answer-value" id="answer-value"></p>
+                </div>
+              </div>
+              <div class="tables-grid">
+                <section class="table-card" aria-labelledby="quad-title">
+                  <div class="table-heading">
+                    <div><span class="table-index">A</span><h3 id="quad-title">Cuádruplos</h3></div>
+                    <span class="table-caption">4 CAMPOS</span>
+                  </div>
+                  <div class="table-scroll" id="quad-table"></div>
+                  <p class="table-note">Cada operación guarda el operador, sus argumentos y el temporal.</p>
+                </section>
+                <section class="table-card" aria-labelledby="triple-title">
+                  <div class="table-heading">
+                    <div><span class="table-index table-index-violet">B</span><h3 id="triple-title">Tríplos</h3></div>
+                    <span class="table-caption">3 CAMPOS</span>
+                  </div>
+                  <div class="table-scroll" id="triple-table"></div>
+                  <p class="table-note">Las operaciones previas se referencian mediante su posición.</p>
+                </section>
+              </div>
+            </div>
+          </section>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>Generador didáctico de código intermedio</span>
+        <span>Hecho para aprender cómo piensa un compilador</span>
+      </footer>
+    </div>
+  </body>
+</html>

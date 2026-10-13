@@ -1,0 +1,100 @@
+:root {
+  color-scheme: light;
+  --ink: #172033;
+  --muted: #778096;
+  --line: #e8eaf1;
+  --surface: #ffffff;
+  --canvas: #f4f6fb;
+  --blue: #4569e8;
+  --blue-dark: #3155d3;
+  --violet: #7759d8;
+  --mono: "DM Mono", "SFMono-Regular", Consolas, monospace;
+  --sans: "DM Sans", Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input { font: inherit; }
+button { cursor: pointer; }
+
+.app-shell { width: min(1160px, calc(100% - 64px)); margin: 0 auto; }
+.workspace { display: grid; gap: 24px; }
+.input-card, .table-card { border: 1px solid var(--line); border-radius: 15px; background: var(--surface); box-shadow: 0 8px 28px #23335f08; }
+.input-card { padding: 25px 28px 23px; }
+.section-heading, .result-heading { display: flex; align-items: center; justify-content: space-between; }
+.section-heading > div, .result-heading > div { display: flex; align-items: center; gap: 11px; }
+.step-number { color: #9ca5b8; font-family: var(--mono); font-size: 11px; font-weight: 500; }
+h2 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -.35px; }
+.keyboard-hint { color: #9ba2b2; font-size: 11px; }
+.field-label { display: block; margin: 24px 0 9px; color: #8991a3; font-size: 9px; font-weight: 700; letter-spacing: 1px; }
+.expression-control { display: flex; min-height: 58px; align-items: center; gap: 14px; padding: 0 17px; border: 1px solid #dfe4f0; border-radius: 9px; background: #fbfcff; transition: border-color .18s, box-shadow .18s; }
+.expression-control:focus-within { border-color: #8299f0; box-shadow: 0 0 0 3px #4569e817; }
+.input-prompt { flex: 0 0 auto; color: #a0a8b8; font-family: var(--mono); font-size: 13px; }
+#expr { width: 100%; min-width: 0; padding: 16px 0; border: 0; outline: 0; background: transparent; color: #27324a; font-family: var(--mono); font-size: 15px; }
+#expr::placeholder { color: #b3bac8; }
+.field-help { margin: 9px 0 0; color: #949bad; font-size: 11px; }
+.field-help code { padding: 2px 5px; border-radius: 4px; background: #f2f4fa; color: #606b83; font-family: var(--mono); font-size: 10px; }
+.message { margin: 12px 0 0; color: #bc4054; font-size: 12px; }
+.form-actions { display: flex; align-items: center; gap: 10px; margin-top: 19px; }
+.button { display: inline-flex; min-height: 39px; align-items: center; justify-content: center; gap: 12px; padding: 0 16px; border: 0; border-radius: 7px; font-size: 12px; font-weight: 600; transition: background .18s, transform .18s; }
+.button:active { transform: translateY(1px); }
+.button-primary { background: var(--blue); color: white; box-shadow: 0 4px 10px #4569e82b; }
+.button-primary:hover { background: var(--blue-dark); }
+.button-primary span:last-child { font-size: 15px; }
+.button-quiet { background: #f1f3f8; color: #707a8e; }
+.button-quiet:hover { background: #e8ebf3; }
+.results { min-height: 202px; }
+.result-heading { display: flex; min-height: 30px; align-items: center; justify-content: space-between; margin: 0 1px 16px; }
+.result-heading h1 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -.35px; }
+.result-expression { max-width: 60%; overflow: hidden; color: #858da0; font-family: var(--mono); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.answer-card { display: flex; min-height: 72px; align-items: center; gap: 13px; padding: 13px 16px; border: 1px solid #dce7e4; border-radius: 10px; background: #f7fbf9; }
+.answer-icon { display: grid; width: 38px; height: 38px; flex: 0 0 auto; place-items: center; border-radius: 11px; background: #e4f3ec; color: #339b71; font-family: Georgia, serif; font-size: 21px; }
+.answer-label { margin: 0 0 3px; color: #78a28e; font-size: 9px; font-weight: 700; letter-spacing: .9px; }
+.answer-value { margin: 0; color: #28684e; font-family: var(--mono); font-size: 14px; font-weight: 500; overflow-wrap: anywhere; }
+.answer-symbolic { border-color: #e8e2f6; background: #faf8fe; }
+.answer-symbolic .answer-icon { background: #eee9fa; color: var(--violet); }
+.answer-symbolic .answer-label { color: #9887c5; }
+.answer-symbolic .answer-value { color: #5e4a9a; }
+.tables-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 17px; }
+.table-card { min-width: 0; padding: 17px 17px 13px; }
+.table-heading, .table-heading > div { display: flex; align-items: center; }
+.table-heading { justify-content: space-between; margin-bottom: 14px; }
+.table-heading > div { gap: 9px; }
+.table-index { display: grid; width: 24px; height: 24px; place-items: center; border-radius: 7px; background: #eaf0ff; color: var(--blue); font-family: var(--mono); font-size: 10px; font-weight: 500; }
+.table-index-violet { background: #f0ebfc; color: var(--violet); }
+.table-heading h3 { margin: 0; font-size: 13px; font-weight: 600; }
+.table-caption { color: #a3aabb; font-size: 8px; font-weight: 700; letter-spacing: .8px; }
+.table-scroll { overflow-x: auto; border: 1px solid #edf0f5; border-radius: 7px; }
+table { width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; }
+th, td { padding: 9px 10px; border-bottom: 1px solid #edf0f5; font-size: 10px; }
+th { background: #f8f9fc; color: #9099aa; font-size: 8px; font-weight: 700; letter-spacing: .45px; text-transform: uppercase; }
+td { color: #566178; font-family: var(--mono); }
+td:first-child { color: #a2aabb; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: #fbfcff; }
+.table-note { margin: 10px 0 0; color: #9ba2b1; font-size: 10px; line-height: 1.5; }
+.footer { display: flex; justify-content: space-between; gap: 15px; padding: 23px 1px 27px; color: #9aa2b1; font-size: 10px; }
+
+@media (max-width: 700px) {
+  .app-shell { width: min(100% - 32px, 560px); }
+  .input-card { padding: 20px 17px; }
+  .keyboard-hint { display: none; }
+  .form-actions { flex-wrap: wrap; }
+  .tables-grid { grid-template-columns: 1fr; }
+  .footer { flex-direction: column; padding-bottom: 20px; }
+}
+
+@media (max-width: 430px) {
+  .input-prompt { display: none; }
+  #expr { font-size: 13px; }
+  .result-expression { max-width: 45%; font-size: 9px; }
+}
