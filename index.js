@@ -153,18 +153,41 @@ function buildIntermediateCode(ast, assignment) {
   return { quadruples, triples };
 }
 
-// Calcula el resultado cuando la expresión solo contiene números.
-function evaluate(ast) {
+// Busca las variables que aparecen en la expresión.
+function findVariables(ast, variables) {
+  if (variables === undefined) {
+    variables = [];
+  }
+
+  if (ast.type === "variable" && variables.indexOf(ast.name) === -1) {
+    variables.push(ast.name);
+  } else if (ast.type === "unary") {
+    findVariables(ast.operand, variables);
+  } else if (ast.type === "binary") {
+    findVariables(ast.left, variables);
+    findVariables(ast.right, variables);
+  }
+
+  return variables;
+}
+
+// Calcula el resultado usando los valores ingresados para las variables.
+function evaluate(ast, variableValues) {
   if (ast.type === "number") return ast.value;
-  if (ast.type === "variable") return null;
+  if (ast.type === "variable") {
+    if (Object.prototype.hasOwnProperty.call(variableValues, ast.name)) {
+      return variableValues[ast.name];
+    }
+    return null;
+  }
   if (ast.type === "unary") {
-    const value = evaluate(ast.operand);
+    const value = evaluate(ast.operand, variableValues);
     if (value === null) return null;
     return ast.operator === "-" ? -value : value;
   }
 
-  const left = evaluate(ast.left);
-  const right = evaluate(ast.right);
+  const left = evaluate(ast.left, variableValues);
+  const right = evaluate(ast.right, variableValues);
   if (left === null || right === null) return null;
 
   let result;
@@ -207,7 +230,9 @@ function formatNumber(value) {
 
 function renderTable(container, headers, rows) {
   const table = document.createElement("table");
+  table.className = "table table-sm align-middle mb-0";
   const thead = document.createElement("thead");
+  thead.className = "table-light";
   const headerRow = document.createElement("tr");
 
   const allHeaders = ["#"].concat(headers);
@@ -251,6 +276,56 @@ const expressionInput = document.querySelector("#expr");
 const errorMessage = document.querySelector("#expression-error");
 const resultContent = document.querySelector("#result-content");
 const results = document.querySelector("#results");
+const variableValuesSection = document.querySelector("#variable-values");
+const variableInputs = document.querySelector("#variable-inputs");
+let variableValues = {};
+
+// Crea un campo numérico para cada variable distinta.
+function showVariableInputs(names) {
+  const existingInputs = variableInputs.querySelectorAll("input");
+  for (let index = 0; index < existingInputs.length; index++) {
+    const name = existingInputs[index].dataset.variable;
+    variableValues[name] = existingInputs[index].value;
+  }
+
+  variableInputs.innerHTML = "";
+  for (let index = 0; index < names.length; index++) {
+    const name = names[index];
+    const column = document.createElement("div");
+    const label = document.createElement("label");
+    const input = document.createElement("input");
+    const inputId = "variable-value-" + name;
+
+    column.className = "col";
+    label.className = "form-label small mb-1";
+    label.htmlFor = inputId;
+    label.textContent = name;
+    input.type = "number";
+    input.step = "any";
+    input.id = inputId;
+    input.className = "form-control form-control-sm";
+    input.dataset.variable = name;
+    input.value = variableValues[name] || "";
+
+    column.appendChild(label);
+    column.appendChild(input);
+    variableInputs.appendChild(column);
+  }
+  variableValuesSection.hidden = names.length === 0;
+}
+
+// Lee los campos y confirma que todas las variables tengan un número válido.
+function readVariableValues(names) {
+  const values = {};
+  for (let index = 0; index < names.length; index++) {
+    const input = variableInputs.querySelector(`[data-variable="${names[index]}"]`);
+    if (input.value.trim() === "" || !Number.isFinite(Number(input.value))) {
+      return null;
+    }
+    values[names[index]] = Number(input.value);
+  }
+  return values;
+}
 
 function calculate() {
   errorMessage.hidden = true;
@@ -261,11 +336,28 @@ function calculate() {
     const parsedExpression = parser.parse();
     const assignment = parsedExpression.assignment;
     const expression = parsedExpression.expression;
+    const variableNames = findVariables(expression);
+
+    if (variableNames.length > 0) {
+      showVariableInputs(variableNames);
+      const enteredValues = readVariableValues(variableNames);
+      if (enteredValues === null) {
+        resultContent.hidden = true;
+        errorMessage.textContent = "Ingresa un valor numérico para cada variable y vuelve a calcular.";
+        errorMessage.hidden = false;
+        variableInputs.querySelector("input").focus();
+        return;
+      }
+      variableValues = enteredValues;
+    } else {
+      showVariableInputs([]);
+      variableValues = {};
+    }
 
     const intermediateCode = buildIntermediateCode(expression, assignment);
     const quadruples = intermediateCode.quadruples;
     const triples = intermediateCode.triples;
-    const value = evaluate(expression);
+    const value = evaluate(expression, variableValues);
     const answerCard = document.querySelector("#answer-card");
     const answerLabel = document.querySelector("#answer-label");
     const answerValue = document.querySelector("#answer-value");
@@ -273,16 +365,9 @@ function calculate() {
     document.querySelector("#result-expression").textContent = assignment
       ? `${assignment} = ${formatExpression(expression)}`
       : formatExpression(expression);
-    if (value === null) {
-      answerCard.classList.add("answer-symbolic");
-      answerLabel.textContent = "RESULTADO SIMBÓLICO";
-      answerValue.textContent = (assignment ? assignment + " = " : "")
-        + formatExpression(expression) + " · contiene variables";
-    } else {
-      answerCard.classList.remove("answer-symbolic");
-      answerLabel.textContent = "RESULTADO NUMÉRICO";
-      answerValue.textContent = (assignment ? assignment + " = " : "") + formatNumber(value);
-    }
+    answerCard.classList.remove("answer-symbolic");
+    answerLabel.textContent = "RESULTADO NUMÉRICO";
+    answerValue.textContent = (assignment ? assignment + " = " : "") + formatNumber(value);
 
     renderTable(document.querySelector("#quad-table"), ["Operador", "Arg. 1", "Arg. 2", "Resultado"], quadruples);
     renderTable(document.querySelector("#triple-table"), ["Operador", "Arg. 1", "Arg. 2"], triples);
@@ -307,5 +392,8 @@ document.querySelector("#clear-button").addEventListener("click", function () {
   errorMessage.hidden = true;
   resultContent.hidden = true;
   document.querySelector("#result-expression").textContent = "";
+  variableValues = {};
+  variableInputs.innerHTML = "";
+  variableValuesSection.hidden = true;
   expressionInput.focus();
 });

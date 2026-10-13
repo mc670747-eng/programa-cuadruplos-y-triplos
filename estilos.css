@@ -27,7 +27,6 @@ button, input { font: inherit; }
 button { cursor: pointer; }
 
 .app-shell { width: min(1160px, calc(100% - 64px)); margin: 0 auto; }
-.workspace { display: grid; gap: 24px; }
 .input-card, .table-card { border: 1px solid var(--line); border-radius: 15px; background: var(--surface); box-shadow: 0 8px 28px #23335f08; }
 .input-card { padding: 25px 28px 23px; }
 .section-heading, .result-heading { display: flex; align-items: center; justify-content: space-between; }
@@ -43,6 +42,8 @@ h2 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -.35px; }
 #expr::placeholder { color: #b3bac8; }
 .field-help { margin: 9px 0 0; color: #949bad; font-size: 11px; }
 .field-help code { padding: 2px 5px; border-radius: 4px; background: #f2f4fa; color: #606b83; font-family: var(--mono); font-size: 10px; }
+.variable-values .field-label { margin: 18px 0 8px; }
+.variable-values .form-label { color: #69748c; font-family: var(--mono); }
 .message { margin: 12px 0 0; color: #bc4054; font-size: 12px; }
 .form-actions { display: flex; align-items: center; gap: 10px; margin-top: 19px; }
 .button { display: inline-flex; min-height: 39px; align-items: center; justify-content: center; gap: 12px; padding: 0 16px; border: 0; border-radius: 7px; font-size: 12px; font-weight: 600; transition: background .18s, transform .18s; }
@@ -64,7 +65,6 @@ h2 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -.35px; }
 .answer-symbolic .answer-icon { background: #eee9fa; color: var(--violet); }
 .answer-symbolic .answer-label { color: #9887c5; }
 .answer-symbolic .answer-value { color: #5e4a9a; }
-.tables-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 17px; }
 .table-card { min-width: 0; padding: 17px 17px 13px; }
 .table-heading, .table-heading > div { display: flex; align-items: center; }
 .table-heading { justify-content: space-between; margin-bottom: 14px; }
@@ -89,7 +89,6 @@ tbody tr:hover { background: #fbfcff; }
   .input-card { padding: 20px 17px; }
   .keyboard-hint { display: none; }
   .form-actions { flex-wrap: wrap; }
-  .tables-grid { grid-template-columns: 1fr; }
   .footer { flex-direction: column; padding-bottom: 20px; }
 }
 
